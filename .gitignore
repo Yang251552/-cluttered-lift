@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# Virtual envs
+venv/
+.venv/
+env/
+
+# Logs / training artefacts
+/logs/
+wandb/
+runs/
+*.log
+# phase eval logs (small, valuable for verification) are tracked
+!results/logs/*.log
+*.tfevents.*
+
+# Checkpoints
+results/checkpoints/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local agent settings
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# Local operating notes — not pushed
+CLAUDE.md

@@ -1,0 +1,284 @@
+[3gH    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H    H   [INFO] Using python from: /home/ubuntu/isaaclab_venv/bin/python
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/ubuntu/IsaacLab/apps/isaacsim_4_5/isaaclab.python.headless.kit
+[INFO]: Parsing configuration from: <class 'granular_lift_env.GranularFrankaCubeLiftEnvCfg_PLAY'>
+[INFO]: Parsing configuration from: isaaclab_tasks.manager_based.manipulation.lift.config.franka.agents.rsl_rl_ppo_cfg:LiftCubePPORunnerCfg
+[WARNING]: The `policy` configuration is deprecated for rsl-rl >= 4.0.0. Please use, e.g., `actor` and `critic` model configurations instead.
+[WARNING]: The `policy` configuration is used to infer the `actor` model configuration.
+[WARNING]: The `policy` configuration is used to infer the `critic` model configuration.
+[WARNING]: The `distribution_cfg` configuration is now used to specify the output distribution for stochastic policies. Consider updating the configuration to use `distribution_cfg` instead of `stochastic`, `init_noise_std`, `noise_std_type`, and `state_dependent_std` parameters.
+
+[36m======================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /tmp/isaaclab/logs/isaaclab_2026-05-05_10-22-11.log[0m
+[36m======================================================================================[0m
+
+[33m10:22:11 [stage.py] WARNING: Isaac Sim < 5.0 does not support thread-local stage contexts. Skipping use_stage().[0m
+[33m10:22:11 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+[Warning] [simulation_app.simulation_app] Modules: ['omni.kit_app'] were loaded before SimulationApp was started and might not be loaded correctly.
+[Warning] [simulation_app.simulation_app] Please check to make sure no extra omniverse or pxr modules are imported before the call to SimulationApp(...)
+Loading user config located at: '/home/ubuntu/isaaclab_venv/lib/python3.10/site-packages/omni/data/Kit/Isaac-Sim/4.5/user.config.json'
+[Info] [carb] Logging to file: /home/ubuntu/isaaclab_venv/lib/python3.10/site-packages/omni/logs/Kit/Isaac-Sim/4.5/kit_20260505_102201.log
+2026-05-05 10:22:01 [0ms] [Warning] [omni.kit.app.plugin] No crash reporter present, dumps uploading isn't available.
+2026-05-05 10:22:01 [6ms] [Warning] [omni.ext.plugin] [ext: rendering_modes] Extensions config 'extension.toml' doesn't exist '/home/ubuntu/IsaacLab/apps/isaacsim_4_5/rendering_modes' or '/home/ubuntu/IsaacLab/apps/isaacsim_4_5/rendering_modes/config'
+2026-05-05 10:22:01 [207ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-05-05 10:22:02 [298ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-05-05 10:22:02 [590ms] [Warning] [omni.datastore] OmniHub is inaccessible
+2026-05-05 10:22:02 [696ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.126.20    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA A10G                      | Yes: 0 |     | 23028   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2237      | f284d87a.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-1052-aws
+| Processor: AMD EPYC 7R32
+| Cores: 4 | Logical Cores: 8
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 31722 | Free Memory: 30136
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-05-05 10:22:06 [4,334ms] [Warning] [gpu.foundation.plugin] ECC is enabled on physical device 0
+2026-05-05 10:22:13 [11,984ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPreviewSurface.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,984ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdUVTexture.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,984ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_float.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,985ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_float2.info:mdl:sourceAsset> w[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 0
+	Physics step-size     : 0.01
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO]: Time taken for scene creation : 2.549147 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 256
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : []
+	Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+[33m10:22:15 [articulation.py] WARNING: Spatial tendons are not supported in Isaac Sim < 5.0: patching spatial-tendon getter and setter to use dummy value[0m
+/home/ubuntu/isaaclab_venv/lib/python3.10/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/home/ubuntu/isaaclab_venv/lib/python3.10/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/home/ubuntu/isaaclab_venv/lib/python3.10/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+[INFO]: Time taken for simulation start : 2.402333 seconds
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++------------------------------------------+
+|           Active Command Terms           |
++-------+-------------+--------------------+
+| Index | Name        |        Type        |
++-------+-------------+--------------------+
+|   0   | object_pose | UniformPoseCommand |
++-------+-------------+--------------------+
+
+[INFO] Event Manager:  <EventManager> contains 1 active terms.
++--------------------------------------+
+| Active Event Terms in Mode: 'reset'  |
++---------+----------------------------+
+|  Index  | Name                       |
++---------+----------------------------+
+|    0    | reset_all                  |
+|    1    | reset_object_position      |
+|    2    | reset_sphere_000           |
+|    3    | reset_sphere_001           |
+|    4    | reset_sphere_002           |
+|    5    | reset_sphere_003           |
+|    6    | reset_sphere_004           |
+|    7    | reset_sphere_005           |
+|    8    | reset_sphere_006           |
+|    9    | reset_sphere_007           |
+|    10   | reset_sphere_008           |
+|    11   | reset_sphere_009           |
+|    12   | reset_sphere_010           |
+|    13   | reset_sphere_011           |
+|    14   | reset_sphere_012           |
+|    15   | reset_sphere_013           |
+|    16   | reset_sphere_014           |
+|    17   | reset_sphere_015           |
+|    18   | reset_sphere_016           |
+|    19   | reset_sphere_017           |
+|    20   | reset_sphere_018           |
+|    21   | reset_sphere_019           |
+|    22   | reset_sphere_020           |
+|    23   | reset_sphere_021           |
+|    24   | reset_sphere_022           |
+|    25   | reset_sphere_023           |
+|    26   | reset_sphere_024           |
+|    27   | reset_sphere_025           |
+|    28   | reset_sphere_026           |
+|    29   | reset_sphere_027           |
+|    30   | reset_sphere_028           |
+|    31   | reset_sphere_029           |
+|    32   | reset_sphere_030           |
+|    33   | reset_sphere_031           |
+|    34   | reset_sphere_032           |
+|    35   | reset_sphere_033           |
+|    36   | reset_sphere_034           |
+|    37   | reset_sphere_035           |
+|    38   | reset_sphere_036           |
+|    39   | reset_sphere_037           |
+|    40   | reset_sphere_038           |
+|    41   | reset_sphere_039           |
+|    42   | reset_sphere_040           |
+|    43   | reset_sphere_041           |
+|    44   | reset_sphere_042           |
+|    45   | reset_sphere_043           |
+|    46   | reset_sphere_044           |
+|    47   | reset_sphere_045           |
+|    48   | reset_sphere_046           |
+|    49   | reset_sphere_047           |
+|    50   | reset_sphere_048           |
+|    51   | reset_sphere_049           |
+|    52   | reset_sphere_050           |
+|    53   | reset_sphere_051           |
+|    54   | reset_sphere_052           |
+|    55   | reset_sphere_053           |
+|    56   | reset_sphere_054           |
+|    57   | reset_sphere_055           |
+|    58   | reset_sphere_056           |
+|    59   | reset_sphere_057           |
+|    60   | reset_sphere_058           |
+|    61   | reset_sphere_059           |
+|    62   | reset_sphere_060           |
+|    63   | reset_sphere_061           |
+|    64   | reset_sphere_062           |
+|    65   | reset_sphere_063           |
++---------+----------------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|   Active Action Terms (shape: 8)   |
++-------+----------------+-----------+
+| Index | Name           | Dimension |
++-------+----------------+-----------+
+|   0   | arm_action     |         7 |
+|   1   | gripper_action |         1 |
++-------+----------------+-----------+
+
+[INFO] Observation Manager: <ObservationManager> contains 1 groups.
++-----------------------------------------------------------+
+| Active Observation Terms in Group: 'policy' (shape: (36,)) |
++----------+-------------------------------------+----------+
+|  Index   | Name                                |  Shape   |
++----------+-------------------------------------+----------+
+|    0     | joint_pos                           |   (9,)   |
+|    1     | joint_vel                           |   (9,)   |
+|    2     | object_position                     |   (3,)   |
+|    3     | target_object_position              |   (7,)   |
+|    4     | actions                             |   (8,)   |
++----------+-------------------------------------+----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++------------------------------------+
+|      Active Termination Terms      |
++-------+-----------------+----------+
+| Index | Name            | Time Out |
++-------+-----------------+----------+
+|   0   | time_out        |   True   |
+|   1   | object_dropping |  False   |
++-------+-----------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 6 active terms.
++-----------------------------------------------------+
+|                 Active Reward Terms                 |
++-------+-----------------------------------+---------+
+| Index | Name                              |  Weight |
++-------+-----------------------------------+---------+
+|   0   | reaching_object                   |     1.0 |
+|   1   | lifting_object                    |    15.0 |
+|   2   | object_goal_tracking              |    16.0 |
+|   3   | object_goal_tracking_fine_grained |     5.0 |
+|   4   | action_rate                       | -0.0001 |
+|   5   | joint_vel                         | -0.0001 |
++-------+-----------------------------------+---------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 2 active terms.
++--------------------------+
+| Active Curriculum Terms  |
++---------+----------------+
+|  Index  | Name           |
++---------+----------------+
+|    0    | action_rate    |
+|    1    | joint_vel      |
++---------+----------------+
+
+[INFO]: Completed setting up the environment...
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['policy']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=36, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=64, out_features=8, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=36, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+
+============================================================
+GRANULAR EVAL  task=Isaac-Granular-Lift-Cube-Franka-Play-v0  seed=0  envs=256
+============================================================
+Episodes finished              : 256/256
+Lift success    (cube_z > 4 cm):  94.53 %
+Reach success   (dist < 5 cm)  :  94.14 %
+Reach success   (dist < 2 cm)  :  92.58 %
+Mean cube_z   at episode end   : 0.3517 m
+Mean goal-dist at episode end  : 0.0374 m
+============================================================
+ith value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,985ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_float3.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,985ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_float4.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,985ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_int.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,986ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_string.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,986ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_normal.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,986ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_point.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,986ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_vector.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,986ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdPrimvarReader_matrix.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
+2026-05-05 10:22:13 [11,987ms] [Warning] [omni.usd] Warning: in GetNodeDiscoveryResults at line 136 of /builds/omniverse/usd-ci/USD/pxr/usd/usdShade/shaderDefUtils.cpp -- Unable to resolve info:sourceAsset </UsdTransform2d.info:mdl:sourceAsset> with value @UsdPreviewSurface.mdl@.
+
