@@ -29,7 +29,7 @@ freely-movable small bodies.
 - [ ] Phase 3 — diagnosis (≤ 2 falsification experiments)
 - [ ] Phase 4 — writeup
 
-![Zero-shot act-1 policy on granular scene, 16 envs](https://raw.githubusercontent.com/Yang251552/-cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
+![Zero-shot act-1 policy on granular scene, 16 envs](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
 
 ## Discipline
 

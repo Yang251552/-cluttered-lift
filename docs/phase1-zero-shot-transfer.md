@@ -122,7 +122,7 @@ the sim-cfg side. If 1024 still overflows, reduce sphere count first
 
 ## Visualization
 
-![Zero-shot policy on granular scene, 16 envs, 12 s @ 15 fps](https://raw.githubusercontent.com/Yang251552/-cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
+![Zero-shot policy on granular scene, 16 envs, 12 s @ 15 fps](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
 
 The act-1 checkpoint, dropped onto the 1d granular scene, lifts most cubes
 and pushes spheres aside. The 7-percentage-point reach@2cm drop is what
