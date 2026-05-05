@@ -67,9 +67,9 @@ def _make_sphere_cfg(idx: int) -> RigidObjectCfg:
             ),
             mass_props=sim_utils.MassPropertiesCfg(mass=SPHERE_MASS),
             collision_props=sim_utils.CollisionPropertiesCfg(),
-            physics_material=sim_utils.RigidBodyMaterialCfg(
-                static_friction=SPHERE_FRICTION, dynamic_friction=SPHERE_FRICTION * 0.8
-            ),
+            # NOTE: no per-sphere physics_material — PhysX caps at 64K materials
+            # globally and 1024 envs × 64 spheres would overflow. We rely on the
+            # PhysX default material so all spheres share one instance.
             visual_material=sim_utils.PreviewSurfaceCfg(
                 diffuse_color=(0.65, 0.45, 0.30), roughness=0.6
             ),
@@ -117,10 +117,43 @@ class GranularFrankaCubeLiftEnvCfg_PLAY(FrankaCubeLiftEnvCfg_PLAY):
         _add_spheres(self)
 
 
+def _disable_curriculum(cfg) -> None:
+    """Remove action_rate / joint_vel curriculum schedules. Keeps the reward
+    weights frozen at their base values for the entire run.
+
+    Phase 2 observed the trained policy collapse exactly when these schedules
+    finished ramping (~iter 425, matches 10000 env-steps per env). H1 tests
+    whether the curriculum is the actor-killer.
+    """
+    for name in ("action_rate", "joint_vel"):
+        if hasattr(cfg.curriculum, name):
+            delattr(cfg.curriculum, name)
+
+
+@configclass
+class GranularFrankaCubeLiftEnvCfg_NoCurric(GranularFrankaCubeLiftEnvCfg):
+    """Phase-3 H1 training variant: cluttered scene with curriculum disabled."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        _disable_curriculum(self)
+
+
+@configclass
+class GranularFrankaCubeLiftEnvCfg_NoCurric_PLAY(GranularFrankaCubeLiftEnvCfg_PLAY):
+    """Phase-3 H1 eval variant."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        _disable_curriculum(self)
+
+
 # ----- gym registration ----------------------------------------------------
 
 _TASK_TRAIN = "Isaac-Granular-Lift-Cube-Franka-v0"
 _TASK_PLAY = "Isaac-Granular-Lift-Cube-Franka-Play-v0"
+_TASK_TRAIN_H1 = "Isaac-Cluttered-Lift-Cube-Franka-NoCurric-v0"
+_TASK_PLAY_H1 = "Isaac-Cluttered-Lift-Cube-Franka-NoCurric-Play-v0"
 
 if _TASK_TRAIN not in gym.registry:
     gym.register(
@@ -141,6 +174,32 @@ if _TASK_PLAY not in gym.registry:
         entry_point="isaaclab.envs:ManagerBasedRLEnv",
         kwargs={
             "env_cfg_entry_point": GranularFrankaCubeLiftEnvCfg_PLAY,
+            "rsl_rl_cfg_entry_point": (
+                f"{agents.__name__}.rsl_rl_ppo_cfg:LiftCubePPORunnerCfg"
+            ),
+        },
+        disable_env_checker=True,
+    )
+
+if _TASK_TRAIN_H1 not in gym.registry:
+    gym.register(
+        id=_TASK_TRAIN_H1,
+        entry_point="isaaclab.envs:ManagerBasedRLEnv",
+        kwargs={
+            "env_cfg_entry_point": GranularFrankaCubeLiftEnvCfg_NoCurric,
+            "rsl_rl_cfg_entry_point": (
+                f"{agents.__name__}.rsl_rl_ppo_cfg:LiftCubePPORunnerCfg"
+            ),
+        },
+        disable_env_checker=True,
+    )
+
+if _TASK_PLAY_H1 not in gym.registry:
+    gym.register(
+        id=_TASK_PLAY_H1,
+        entry_point="isaaclab.envs:ManagerBasedRLEnv",
+        kwargs={
+            "env_cfg_entry_point": GranularFrankaCubeLiftEnvCfg_NoCurric_PLAY,
             "rsl_rl_cfg_entry_point": (
                 f"{agents.__name__}.rsl_rl_ppo_cfg:LiftCubePPORunnerCfg"
             ),

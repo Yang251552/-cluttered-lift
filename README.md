@@ -25,11 +25,13 @@ freely-movable small bodies.
 
 - [x] Phase 0 — substrate decision: multi-rigid-body proxy (8×8 grid of 64 spheres, r=2 cm) via `RigidObjectCollection` ([details](docs/phase0-substrate-decision.md))
 - [x] Phase 1 — zero-shot transfer of act-1 policy: **reach@2cm drops 100% → 92.58%, mean goal-dist degrades 12×** ([details](docs/phase1-zero-shot-transfer.md))
-- [ ] Phase 2 — re-train PPO on granular scene from scratch (in progress)
-- [ ] Phase 3 — diagnosis (≤ 2 falsification experiments)
+- [x] Phase 2 — re-train PPO from scratch: **policy collapses to 0% / 0% / 0% at iter 425 when the curriculum schedule kicks in** (stopped early per CLAUDE.md §2.1 mid-train rule; [details](docs/phase2-train-from-scratch.md))
+- [ ] Phase 3 — diagnosis (≤ 2 falsification experiments — H1: disable curriculum; H2: warm-start from act-1)
 - [ ] Phase 4 — writeup
 
-![Zero-shot act-1 policy on granular scene, 16 envs](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
+**Before / after**: same scene, left = zero-shot act-1 policy (92.58% reach@2cm), right = retrained-from-scratch policy at iter 1100 (0% reach@2cm).
+
+![before / after](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_before_after.gif)
 
 ## Discipline
 
