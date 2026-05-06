@@ -30,9 +30,19 @@ freely-movable small bodies.
 - [ ] Phase 3 H2 — warm-start from act-1 checkpoint (next session)
 - [ ] Phase 4 — writeup
 
-**Three-panel comparison** — left to right: zero-shot act-1 policy (92.58% reach@2cm) / phase-2 retrained from scratch with curriculum on (0%, collapsed at iter 425) / phase-3 H1 retrained from scratch with curriculum off (0%, never started learning).
+**Phase comparison** — one rollout per phase, stacked top-to-bottom in chronological order. Future phases (H2, etc.) will be appended below using the same one-GIF-per-row layout.
 
-![three panel comparison](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/h1_three_panel.gif)
+**Phase 1 — zero-shot transfer of act-1 policy** (reach@2cm 92.58%, mean goal-dist degrades 12× vs bare table):
+
+![phase 1 zero-shot](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_zero_shot_seed42.gif)
+
+**Phase 2 — retrain from scratch, curriculum on** (0% across all thresholds; policy collapses to "don't move" at iter 425 when the action_rate / joint_vel curriculum penalty completes its ramp):
+
+![phase 2 retrained](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_trained_seed42.gif)
+
+**Phase 3 H1 — retrain from scratch, curriculum off** (0% across all thresholds; the cliff at iter 425 is gone, but no learning trajectory replaces it — H1 falsified):
+
+![phase 3 H1 no curriculum](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/h1_nocurric_seed42.gif)
 
 ## Discipline
 
