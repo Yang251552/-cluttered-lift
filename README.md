@@ -28,7 +28,7 @@ freely-movable small bodies.
 - [x] Phase 2 — re-train PPO from scratch: **policy collapses to 0% / 0% / 0% at iter 425 when the curriculum schedule kicks in** (stopped early per CLAUDE.md §2.1 mid-train rule; [details](docs/phase2-train-from-scratch.md))
 - [x] Phase 3 H1 — disable curriculum: **also collapses to 0% / 0% / 0%** ([details](docs/phase3-h1-no-curriculum.md)). Verdict: H1 falsified — the curriculum is not the actor-killer; the bottleneck is upstream (exploration bootstrap)
 - [x] Phase 3 H2 — warm-start from act-1 checkpoint: **96% lift, 70% reach@2cm over 2 seeds** ([details](docs/phase3-h2-warmstart.md)). Verdict: H2 supported — a working policy survives 1500 PPO updates on this substrate; the random-init bootstrap is the bottleneck
-- [ ] Phase 4 — writeup
+- [x] Phase 4 — writeup (this README + the five phase docs above; diagnostic prose drafted by Claude per `CLAUDE.md` §6.1)
 
 ## Result table
 
@@ -41,7 +41,7 @@ freely-movable small bodies.
 | **Phase 3 H2 warm-start, seed 0** (256 rollouts) | **96.09%** | **95.70%** | **69.53%** | **0.348** | **0.0361** |
 | **Phase 3 H2 warm-start, seed 42** (256 rollouts) | **96.48%** | **96.48%** | **72.27%** | **0.346** | **0.0371** |
 
-**Phase comparison** — one rollout per phase, stacked top-to-bottom in chronological order. Future phases (H2, etc.) will be appended below using the same one-GIF-per-row layout.
+**Phase comparison** — one rollout per phase, stacked top-to-bottom in chronological order.
 
 **Phase 1 — zero-shot transfer of act-1 policy** (reach@2cm 91.02%, mean goal-dist degrades 13× vs bare table; averaged over 2 seeds):
 
@@ -69,9 +69,9 @@ That collapse motivated two falsification experiments in phase 3.
 
 **H2 — exploration bootstrap is the structural cause.** A random-init policy can't find a useful gradient because reaching/lifting reward is too noisy under sphere contacts; if we initialise from a policy that already encodes the lift behaviour, PPO updates should produce informative gradients on every successful lift. *Supported*: warm-started from act-1's `model_1499.pt`, the same NoCurric task that left H1 stuck at 0% lets PPO fine-tune to 96% over 1500 fresh updates. Same optimiser, same substrate, same seed — only the initialisation differs.
 
-**The H1/H2 contrast is the act-3 deliverable.** PPO can train on this contact-rich scene; it cannot bootstrap into it. The optimiser-level claim and the bootstrap-level claim are not the same claim, and naive PPO-from-scratch failures conflate them.
+**The H1/H2 contrast is the takeaway from this project.** PPO can train on this contact-rich scene; it cannot bootstrap into it. The optimiser-level claim and the bootstrap-level claim are not the same claim, and naive PPO-from-scratch failures conflate them.
 
-Side-by-side rollout, left to right: zero-shot act-1 policy (lift 94.5%) | phase 2 retrained, curriculum on (0%) | phase 3 H1 retrained, curriculum off (0%) | phase 3 H2 warm-started, curriculum off (lift 96%):
+Side-by-side rollout, left to right: zero-shot act-1 policy (lift 93.4%) | phase 2 retrained, curriculum on (0%) | phase 3 H1 retrained, curriculum off (0%) | phase 3 H2 warm-started, curriculum off (lift 96.3%):
 
 ![phase comparison 4-panel](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/phase_comparison_4panel.gif)
 
@@ -79,15 +79,13 @@ Side-by-side rollout, left to right: zero-shot act-1 policy (lift 94.5%) | phase
 
 If I had another budget cycle on this, the experiment I would actually run first is a substrate curriculum: start training with zero spheres on the table (i.e. the act-1 bare-table task), and grow sphere density linearly over the first ~500 iters until the substrate matches the locked phase-1 config. The reason I want to try this one specifically is that H2 already says PPO can stay on the task manifold once it is there — so a substrate that starts on bare table puts the random-init policy onto the manifold for free, and the question becomes whether the policy can keep up as the substrate gets harder around it. This also has the nice property that it does not require a separately-trained teacher checkpoint, so it is a single-run experiment that fits inside the act-3 framing. If it works, it is a stronger statement than H2 because the policy never had a privileged warm start.
 
-The other thing I am curious about but did not do is opening the H2 evaluation per-episode and splitting the inside-cluster vs outside-cluster spawns. Phase 1 noted the bimodal split (~56% inside, ~44% outside) but never reported the split in eval — I think the H2 reach@2cm drop from 92.58% to ~70% is probably almost entirely on the inside-cluster spawns, and if that were verified it would change how I read the H2 result. The H2 fine-tuning probably did not "lose precision generally"; it probably "stayed precise on outside-cluster, gained robustness inside-cluster". That is a different and more useful story than "warm-start fine-tune trades precision for robustness", and the experiment to tell those two apart is a couple of hours of `eval_granular.py` re-runs with cluster-membership tags written out, not new training.
+The other thing I am curious about but did not do is opening the H2 evaluation per-episode and splitting the inside-cluster vs outside-cluster spawns. Phase 1 noted the bimodal split (~56% inside, ~44% outside) but never reported the split in eval — I think the H2 reach@2cm drop from 91.0% (zero-shot, 2-seed average) to 70.9% (H2, 2-seed average) is probably almost entirely on the inside-cluster spawns, and if that were verified it would change how I read the H2 result. The H2 fine-tuning probably did not "lose precision generally"; it probably "stayed precise on outside-cluster, gained robustness inside-cluster". That is a different and more useful story than "warm-start fine-tune trades precision for robustness", and the experiment to tell those two apart is a couple of hours of `eval_granular.py` re-runs with cluster-membership tags written out, not new training.
 
 What I would *not* try is reward shaping on the contact pattern (e.g. penalising sphere displacement during the reach phase). I do not think that is uninteresting, but it changes the substrate definition of the problem, which makes the result hard to compare with phase 1's zero-shot transfer baseline. The whole point of act-3 was that the substrate stays fixed and the questions are about policy and optimiser; once you start re-shaping the reward you are answering a different question and the act-1 baseline stops being the right anchor.
 
 ## Discipline
 
-Phase-gated, not auto-iterated. See [`CLAUDE.md`](CLAUDE.md) for why this
-matters — and why the diagnostic prose in the eventual writeup must be
-written by the human, not generated.
+Phase-gated, not auto-iterated. Each phase has an explicit stop point, an output doc, and a time cap. See `CLAUDE.md` for the operational rules (the file is local-only and gitignored — it is the operator's notebook, not part of the public repo).
 
 ## Why "rigid-body proxy" instead of real granular media
 

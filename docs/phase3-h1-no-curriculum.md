@@ -41,9 +41,6 @@ Stopping rule fired by iter ~450:
 
 ![phase 3 H1 training curves](../results/figures/h1_nocurric_curves.png)
 
-> Note: hardcoded suptitle still says act-1's "1500 iters, 24.2 min". Same
-> issue as phase 2's curve PNG. TODO: parameterise the plot script.
-
 The phase-2 cliff at iter ~425 is gone (no curriculum to ramp), but there is
 no replacement learning trajectory. Mean reward, lift reward, and goal-tracking
 fine all stay at their iter-0 levels. Cube-to-goal distance drifts upward over
@@ -54,10 +51,10 @@ goal at the end of training than at the start.
 
 | Eval | Lift @ 4 cm | Reach @ 5 cm | Reach @ 2 cm | Mean cube z (m) | Mean goal-dist (m) |
 |---|---|---|---|---|---|
-| Bare-table act-1 | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
-| Granular zero-shot (act-1 policy) | 94.53% | 94.14% | 92.58% | 0.352 | 0.0374 |
-| Phase 2 retrained (curriculum on) | 0.00% | 0.00% | 0.00% | 0.024 | 0.418 |
-| **Phase 3 H1 retrained (curriculum off)** | **0.00%** | **0.00%** | **0.00%** | **0.022** | **0.440** |
+| Bare-table act-1 (256 × 2 seeds) | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
+| Granular zero-shot (act-1 policy, 256 × 2 seeds) | 93.36% | 93.16% | 91.02% | 0.346 | 0.0421 |
+| Phase 2 retrained, curriculum on (256 × 1 seed) | 0.00% | 0.00% | 0.00% | 0.024 | 0.418 |
+| **Phase 3 H1 retrained, curriculum off (256 × 1 seed)** | **0.00%** | **0.00%** | **0.00%** | **0.022** | **0.440** |
 
 H1 collapsed to the same 0% as phase 2 but via a different path. Phase 2 the
 policy briefly tried, the curriculum penalty crushed it at iter 425, and it
@@ -68,7 +65,7 @@ success.
 
 ## Three-panel comparison
 
-Left: zero-shot act-1 policy (92.58% reach@2cm).
+Left: zero-shot act-1 policy (91.0% reach@2cm averaged over 2 seeds).
 Middle: phase-2 retrained policy at iter 1100 (curriculum on, 0%).
 Right: phase-3 H1 retrained policy at iter 450 (curriculum off, 0%).
 
@@ -85,6 +82,11 @@ functionally identical: 0% / 0% / 0% on eval, cube essentially untouched.
 
 ## What this implies for H2
 
+> **Update (2026-05-06):** H2 has since been run; the verdict was *supported*,
+> not falsified. See [`phase3-h2-warmstart.md`](phase3-h2-warmstart.md). The
+> rest of this section is the original forward-looking framing as written
+> when only H1 had been run, kept for traceability.
+
 The remaining viable hypothesis from phase 2's diagnosis is **exploration
 bootstrap**: random-init PPO cannot find the gradient direction that leads
 toward the lift-and-place behaviour when the contact pattern around the cube
@@ -94,9 +96,10 @@ provide a useful training signal from scratch.
 
 H2 tests this by warm-starting from the act-1 checkpoint, which already
 encodes the "reach, grasp, lift" structure on bare table. If a policy that
-*can* lift the cube on the cluttered scene (even at a degraded 92.58%) is
-allowed to fine-tune under continued PPO updates, it has a reward signal that
-is actually informative — every successful lift produces a clear gradient.
+*can* lift the cube on the cluttered scene (even at a degraded ~91% averaged
+over 2 seeds) is allowed to fine-tune under continued PPO updates, it has a
+reward signal that is actually informative — every successful lift produces a
+clear gradient.
 
 If H2 also collapses to 0%, the conclusion strengthens: not even a warmed-up
 policy can survive PPO updates on this substrate, which would point to

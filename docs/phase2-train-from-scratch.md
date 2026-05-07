@@ -38,9 +38,9 @@ Continuing to iter 1500 would have produced ≈58 min of additional training for
 
 | Eval | Lift @ 4 cm | Reach @ 5 cm | Reach @ 2 cm | Mean cube z (m) | Mean goal-dist (m) |
 |---|---|---|---|---|---|
-| Bare-table act-1 | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
-| Granular zero-shot (act-1 policy) | 94.53% | 94.14% | 92.58% | 0.352 | 0.0374 |
-| **Granular trained from scratch** | **0.00%** | **0.00%** | **0.00%** | **0.024** | **0.418** |
+| Bare-table act-1 (256 × 2 seeds) | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
+| Granular zero-shot (act-1 policy, 256 × 2 seeds) | 93.36% | 93.16% | 91.02% | 0.346 | 0.0421 |
+| **Granular trained from scratch (256 × 1 seed)** | **0.00%** | **0.00%** | **0.00%** | **0.024** | **0.418** |
 
 Mean cube z = 0.024 m means the cube is sitting at table level. The trained
 policy does not lift it. Mean goal-dist = 0.418 m means the cube is more or less
@@ -50,11 +50,6 @@ where it spawned, untouched. The 0% across all three success criteria is not a
 ## What happened in training (read with the curve panel below)
 
 ![phase 2 training curves](../results/figures/granular_seed42_curves.png)
-
-> Note: the suptitle on this PNG is hardcoded from the act-1 plot script
-> ("PPO training, seed 42, 1500 iters, A10G, 24.2 min"). For phase 2 it should
-> read `1100 iters / ~58 min`. TODO: parameterise `scripts/plot_training_curves.py`
-> to take a `--title` arg.
 
 Reading the curves left-to-right, top-to-bottom:
 
@@ -70,7 +65,7 @@ Reading the curves left-to-right, top-to-bottom:
 
 6. **Value loss**: a single sharp spike at iter ~425 (the collapse), then drops to a low-noise floor. The critic gives up trying to predict reward once the actor settles into "don't move".
 
-The whole story is in panel 1's iter-425 cliff. Up to that point the actor was attempting reaches (panel 1's `reaching_object` reward in the wandb dashboard climbed to a small peak ~0.03 over iter 0–400). At iter 425 the curriculum schedule for `joint_vel` and `action_rate` kicked in hard, and the resulting penalty was an order of magnitude larger than any reach reward the actor was earning. PPO's adaptive learning rate, plus the KL-clipped surrogate, then pushed the policy toward "minimise penalty" — which means "don't move". Once the actor stopped trying to reach, all task rewards went silent, the curriculum penalty stayed bounded at its plateau value, and the policy was stable at a degenerate local minimum.
+The whole story is in panel 1's iter-425 cliff. Up to that point the actor was attempting reaches (the `reaching_object` reward in the wandb dashboard climbed to a small peak ~0.03 over iter 0–400). At iter 425 the `joint_vel` / `action_rate` curriculum schedule completed its ramp and the penalty became the dominant term in the loss; PPO's surrogate then pushed the policy toward whatever shrinks that term, which on this action space is "don't move". Once the actor stopped trying to reach, all task rewards went silent, the curriculum penalty stayed bounded at its plateau value, and the policy was stable at a degenerate local minimum. The exact magnitudes that make this collapse the dominant outcome rather than a recoverable dip are in the takeaway section below.
 
 ## Two falsification experiments for phase 3
 
@@ -81,7 +76,7 @@ that phase 3 can run, each producing a falsifiable answer:
 Disable the `joint_vel` and `action_rate` curriculum schedules (set their max weight to the base value, no ramp). Re-run phase 2 training. If mean reward now climbs and lifts succeed, H1 is supported. If the policy still collapses, H1 is falsified and the cause is upstream of curriculum.
 
 **H2 — "exploration bootstrap fails on cluttered substrate, but a warmed-up policy survives"**
-Re-run phase 2 training but initialise weights from the act-1 `model_1499.pt` checkpoint (the one that hits 92.58% zero-shot). If the policy fine-tunes upward toward 100% under continued PPO updates, H2 is supported. If it collapses to the same degenerate "don't move" minimum, H2 is falsified and the issue is structural to the curriculum / reward, not to the random init.
+Re-run phase 2 training but initialise weights from the act-1 `model_1499.pt` checkpoint (the one that hits ~91% zero-shot, 2-seed average). If the policy fine-tunes upward toward 100% under continued PPO updates, H2 is supported. If it collapses to the same degenerate "don't move" minimum, H2 is falsified and the issue is structural to the curriculum / reward, not to the random init.
 
 Both fit inside the act-3 disciplines (no reward shaping, still PPO via rsl_rl). Phase 3 picks one or both, time-boxed at 4 h total.
 
@@ -92,7 +87,7 @@ on the right. Same 16 parallel envs, same scene, same 12 s window. Left side
 the cubes are being lifted and pushed through the cluster. Right side the
 policy is essentially still.
 
-![before / after on cluttered scene](https://raw.githubusercontent.com/Yang251552/-cluttered-lift/main/results/videos/granular_before_after.gif)
+![before / after on cluttered scene](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/granular_before_after.gif)
 
 Full mp4 at [`results/videos/granular_before_after.mp4`](../results/videos/granular_before_after.mp4).
 

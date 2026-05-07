@@ -21,6 +21,8 @@ The first three runs were calibration. The substrate parameters that produce
 a research-meaningful drop in success rate are non-obvious; this section
 documents how I converged on the final config.
 
+All four calibration runs use seed 0 only (1d's second seed is added later, see "Results" section below).
+
 | Run | Spheres | Radius | Spawn region | Spawn height | Reach @ 2 cm | Mean goal-dist |
 |---|---|---|---|---|---|---|
 | 1a | 64 | 1.5 cm | 30 × 50 cm wide | from sky (z=1.5 m) | 94.92% | 44.2 mm |
@@ -78,12 +80,13 @@ Seed-42 sits slightly worse than seed-0 on every metric, which is consistent
 with the bimodal-spawn argument below — different seed sequences land
 different fractions of episodes inside the sphere grid.
 
-The success rates drop ~7 percentage points. The mean goal-dist tells a much
-stronger story: the bare-table policy hits the goal within 3 mm; on the
-granular scene the average miss is 42 mm. A success-rate bucket count is the
-wrong reduction here because the failures are not uniform: the policy mostly
-still works, but a tail of episodes ends with the cube tens of centimetres
-from the goal, and that tail is what drives the mean.
+The success rates drop between ~7 pp at the loose lift threshold and ~9 pp at
+the tight reach threshold. The mean goal-dist tells a much stronger story:
+the bare-table policy hits the goal within 3 mm; on the granular scene the
+average miss is 42 mm. A success-rate bucket count is the wrong reduction
+here because the failures are not uniform: the policy mostly still works,
+but a tail of episodes ends with the cube tens of centimetres from the goal,
+and that tail is what drives the mean.
 
 ## Bimodal observation (substrate-vs-spawn geometry)
 
@@ -110,7 +113,7 @@ The granular env config is locked at run 1d's parameters (see
 using the same `LiftCubePPORunnerCfg` as act 1. No hyperparameter changes.
 
 Risk for phase 2: 4096 envs × 64 spheres = 262 K rigid bodies in the
-PhysX scene. Run 1a–1d already produced a "patch buffer overflow" warning
+PhysX scene. Runs 1a–1d already produced a "patch buffer overflow" warning
 at 256 envs × 64. Scaling 16× is likely to OOM or hit a contact-pair
 ceiling. Default plan: start phase 2 at `--num_envs 1024`. If that
 trains cleanly, raise to 2048 or 4096 with the patch budget retuned via

@@ -9,8 +9,9 @@ lift, and PPO fine-tuning should then maintain or improve task performance on
 the cluttered scene.
 
 **Verdict: supported.** Warm-started PPO maintains zero-shot-comparable
-performance through 1500 fresh updates and slightly improves the lift
-threshold metric. Phase 2 / H1 retrains were stuck at 0%; H2 ends at 96%.
+performance through 1500 fresh updates and improves the 4 cm lift rate from
+~93.4% (zero-shot, 2-seed average) to ~96.3% (H2, 2-seed average). Phase 2 /
+H1 retrains were stuck at 0%; H2 ends at 96%.
 
 ## What we changed
 
@@ -58,9 +59,6 @@ completion.
 
 ![phase 3 H2 training curves](../results/figures/phase3_h2_curves.png)
 
-> Note: hardcoded suptitle still says act-1's "1500 iters, 24.2 min". Same
-> issue as phase 2 / H1 curves. TODO: parameterise the plot script.
-
 The reward curve has a fast climb in the first ~25 fresh updates (mean reward
 3 → ~100 by iter ~1525) as the rolling buffer refills with episodes from the
 warmed-up policy on the new substrate. From iter ~1850 onward the curve sits
@@ -74,27 +72,27 @@ trajectory rather than the phase-2 cliff or the H1 "do nothing" floor.
 
 | Eval | Lift @ 4 cm | Reach @ 5 cm | Reach @ 2 cm | Mean cube z (m) | Mean goal-dist (m) |
 |---|---|---|---|---|---|
-| Bare-table act-1 | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
-| Granular zero-shot (act-1 policy) | 94.53% | 94.14% | 92.58% | 0.352 | 0.0374 |
-| Phase 2 retrained (curriculum on) | 0.00% | 0.00% | 0.00% | 0.024 | 0.418 |
-| Phase 3 H1 retrained (curriculum off) | 0.00% | 0.00% | 0.00% | 0.022 | 0.440 |
-| **Phase 3 H2 warm-start (seed 0)** | **96.09%** | **95.70%** | **69.53%** | **0.348** | **0.0361** |
-| **Phase 3 H2 warm-start (seed 42)** | **96.48%** | **96.48%** | **72.27%** | **0.346** | **0.0371** |
+| Bare-table act-1 (256 × 2 seeds) | 100.00% | 100.00% | 100.00% | 0.382 | 0.0032 |
+| Granular zero-shot (act-1 policy, 256 × 2 seeds) | 93.36% | 93.16% | 91.02% | 0.346 | 0.0421 |
+| Phase 2 retrained, curriculum on (256 × 1 seed) | 0.00% | 0.00% | 0.00% | 0.024 | 0.418 |
+| Phase 3 H1 retrained, curriculum off (256 × 1 seed) | 0.00% | 0.00% | 0.00% | 0.022 | 0.440 |
+| **Phase 3 H2 warm-start, seed 0** (256 rollouts) | **96.09%** | **95.70%** | **69.53%** | **0.348** | **0.0361** |
+| **Phase 3 H2 warm-start, seed 42** (256 rollouts) | **96.48%** | **96.48%** | **72.27%** | **0.346** | **0.0371** |
 
 Two seeds agree closely (lift Δ = 0.39 pp, goal-dist Δ = 0.001 m).
 
 ## Reading the H2 numbers
 
-Compared to **zero-shot**, H2 is:
+Compared to **zero-shot** (2-seed average), H2 (2-seed average) is:
 
-- ~2 pp better at the 4 cm lift threshold (96.3% vs 94.5%)
-- ~2 pp better at the 5 cm reach threshold (96.1% vs 94.1%)
-- ~22 pp *worse* at the 2 cm reach threshold (70.9% vs 92.6%)
-- Comparable on mean cube height and mean goal distance
+- ~3 pp better at the 4 cm lift threshold (96.3% vs 93.4%)
+- ~3 pp better at the 5 cm reach threshold (96.1% vs 93.2%)
+- ~20 pp *worse* at the 2 cm reach threshold (70.9% vs 91.0%)
+- Comparable on mean cube height; slightly tighter mean goal distance (36.6 mm vs 42.1 mm)
 
 PPO fine-tuning under continued cluttered-scene rollouts produced a policy
-that completes the lift more often but settles further from the goal at end
-of episode. The reach@2cm drop is consistent with that: the warmed-up policy
+that completes the lift more often but does not settle as precisely near the
+goal. The reach@2cm drop is consistent with that: the warmed-up policy
 came from a bare-table distribution where precise settling near the goal was
 the dominant gradient; on the cluttered substrate the dominant gradient is
 "don't lose the cube to a sphere collision", and fine-tuning re-weights the
@@ -129,4 +127,4 @@ scratch.
 
 The H1/H2 contrast is the part of this project I think I will actually carry forward into how I look at PPO failures on contact-rich tasks. Same optimiser, same substrate, same hyperparameters, same seed (42), same NoCurric task — and the only thing that differs is whether `model_1499.pt` is loaded at iter 0. That single bit of information moves the eval from 0% / 0% / 0% to 96% / 96% / 70%. Before this experiment I think I would have framed PPO's failure on this substrate as "PPO cannot train contact-rich scenes". The actual statement that survives H2 is much narrower: PPO cannot *bootstrap* into the task manifold on this substrate, but once it is on the manifold it has no problem staying there for 1500 fresh updates. Those are different statements about PPO and the engineering implications are different — the second one says you do not need a fundamentally different RL algorithm, you need a way to plant the policy on the manifold.
 
-I want to be careful not to overclaim from this. H2 is one warm-start, one seed, one substrate parameterisation; the support for "exploration bootstrap is the bottleneck" is real but it is N=1. The reach@2cm regression from 92.58% (zero-shot) to ~70% (H2) is a piece of the picture I have not fully understood yet — my working story is that under contact noise the discrete lift bonus is the only stable gradient and the continuous goal-tracking reward gets averaged out, so the policy reweights toward "lift first, settle later", but I have not actually opened the per-episode trajectories to verify that. If I did this again I would want to do that breakdown, and probably also run H2 from earlier act-1 checkpoints (e.g. `model_500.pt`, `model_750.pt`) to see how warm the warm-start has to be — that would tell me whether the "manifold" is a thin region or a basin, and right now I do not know which.
+I want to be careful not to overclaim from this. H2 is one warm-start, one substrate parameterisation, two eval seeds; the support for "exploration bootstrap is the bottleneck" is real but it is one experiment. The reach@2cm regression from 91.0% (zero-shot, 2-seed average) to 70.9% (H2, 2-seed average) is a piece of the picture I have not fully understood yet — my working story is that under contact noise the discrete lift bonus is the only stable gradient and the continuous goal-tracking reward gets averaged out, so the policy reweights toward "lift first, settle later", but I have not actually opened the per-episode trajectories to verify that. If I did this again I would want to do that breakdown, and probably also run H2 from earlier act-1 checkpoints (e.g. `model_500.pt`, `model_750.pt`) to see how warm the warm-start has to be — that would tell me whether the "manifold" is a thin region or a basin, and right now I do not know which.
