@@ -63,19 +63,24 @@ cube is now directly inside or adjacent to the sphere cluster at episode start,
 and any lift trajectory must displace at least the spheres in immediate
 contact.
 
-## Results — phase 1 final (run 1d)
+## Results — phase 1 final (run 1d, two seeds)
 
-| Metric | Bare-table (act 1) | Granular (1d) | Change |
-|---|---|---|---|
-| Lift success @ 4 cm | 100.00% | 94.53% | −5.5 pp |
-| Reach success @ 5 cm | 100.00% | 94.14% | −5.9 pp |
-| Reach success @ 2 cm | 100.00% | 92.58% | −7.4 pp |
-| Mean cube z at episode end | 0.382 m | 0.352 m | −3.0 cm |
-| Mean goal-dist at episode end | 3.2 mm | 37.4 mm | **×11.7** |
+| Metric | Bare-table (act 1, 2 seeds) | Granular 1d, seed 0 | Granular 1d, seed 42 | Granular 1d, mean | Change vs bare |
+|---|---|---|---|---|---|
+| Lift success @ 4 cm | 100.00% | 94.53% | 92.19% | 93.36% | −6.6 pp |
+| Reach success @ 5 cm | 100.00% | 94.14% | 92.19% | 93.16% | −6.8 pp |
+| Reach success @ 2 cm | 100.00% | 92.58% | 89.45% | 91.02% | −9.0 pp |
+| Mean cube z at episode end | 0.382 m | 0.352 m | 0.340 m | 0.346 m | −3.6 cm |
+| Mean goal-dist at episode end | 3.2 mm | 37.4 mm | 46.7 mm | 42.1 mm | **×13.1** |
+
+Two seeds agree to within ~3 pp on each success-rate metric and ~9 mm on goal-distance.
+Seed-42 sits slightly worse than seed-0 on every metric, which is consistent
+with the bimodal-spawn argument below — different seed sequences land
+different fractions of episodes inside the sphere grid.
 
 The success rates drop ~7 percentage points. The mean goal-dist tells a much
 stronger story: the bare-table policy hits the goal within 3 mm; on the
-granular scene the average miss is 37 mm. A success-rate bucket count is the
+granular scene the average miss is 42 mm. A success-rate bucket count is the
 wrong reduction here because the failures are not uniform: the policy mostly
 still works, but a tail of episodes ends with the cube tens of centimetres
 from the goal, and that tail is what drives the mean.
@@ -85,8 +90,8 @@ from the goal, and that tail is what drives the mean.
 The cube's spawn region (±10 cm × ±25 cm) is wider in y than the sphere grid
 (±14 cm × ±14 cm). About 56% of cube spawns fall inside the grid; the other
 44% land outside the cluster on bare table. If the outside-cluster spawns
-succeed at 100% (matching bare-table), the inside-cluster success rate is
-~85% (solving 0.56·X + 0.44·1.00 = 0.9258 → X ≈ 0.85).
+succeed at 100% (matching bare-table), the two-seed average inside-cluster
+success rate is ~84% (solving 0.56·X + 0.44·1.00 = 0.9102 → X ≈ 0.84).
 
 This bimodal split is the actual research signal phase 1 produces. It is
 the structural feature that phases 2 and 3 should explain or close.
@@ -118,7 +123,8 @@ the sim-cfg side. If 1024 still overflows, reduce sphere count first
 - [`phase1a_64x1.5cm_wide.log`](../results/logs/phase1a_64x1.5cm_wide.log) — 64 × 1.5 cm spheres, wide scatter from sky
 - [`phase1b_64x2.5cm_wide.log`](../results/logs/phase1b_64x2.5cm_wide.log) — 64 × 2.5 cm spheres, wide scatter from sky
 - [`phase1c_64x2.0cm_tight.log`](../results/logs/phase1c_64x2.0cm_tight.log) — 64 × 2.0 cm spheres, tight scatter from sky
-- [`phase1d_64x2.0cm_grid.log`](../results/logs/phase1d_64x2.0cm_grid.log) — **locked**: 64 × 2.0 cm in 8×8 on-table grid
+- [`phase1d_64x2.0cm_grid_seed0.log`](../results/logs/phase1d_64x2.0cm_grid_seed0.log) — **locked**: 64 × 2.0 cm in 8×8 on-table grid, seed 0
+- [`phase1d_64x2.0cm_grid_seed42.log`](../results/logs/phase1d_64x2.0cm_grid_seed42.log) — locked config, seed 42 (added 2026-05-07)
 
 ## Visualization
 
