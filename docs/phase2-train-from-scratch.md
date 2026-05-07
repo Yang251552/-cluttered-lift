@@ -106,10 +106,8 @@ Full mp4 at [`results/videos/granular_before_after.mp4`](../results/videos/granu
 - `results/tfevents/granular_seed42/events.out.tfevents.*` (gitignored)
 - `configs/granular_pick/{agent,env}.yaml` (the resolved configs the run actually used)
 
-> **TODO (human): research observation paragraph.**
->
-> Two or three sentences in your own voice on what the curriculum-collapse
-> story tells you about how to design RL pipelines for contact-rich tasks,
-> and which of H1 / H2 you find more interesting (and why). Same rule as
-> phase 1: this is the part PIs read for research taste, and it has to
-> sound like the person who ran the experiment.
+## What I take away from the curriculum collapse
+
+What I think is most interesting in phase 2 is that I had been treating the `joint_vel` and `action_rate` curriculum as essentially a free regulariser — its purpose on the bare table is to clean up jerky motions once the policy already lifts cubes, and act-1 hit 100% with this exact ramp, so I had no reason to look at it carefully. On the cluttered scene the same ramp behaved very differently: when the curriculum penalty completed its ramp at iter 425 it had grown to roughly −0.1 in magnitude, but the lift reward sitting next to it was around 0.8 and the reaching reward around 0.03. So the moment the curriculum was at "intended" weight it was already an order of magnitude larger than the actor's only positive signal. From there PPO's surrogate loss is going to push toward whatever shrinks the dominant term, and "don't move" is a global minimum of `action_rate` and `joint_vel` simultaneously. So the policy converged there, the task reward went silent because the actor stopped trying, and the critic gave up — that is what panel 6 of the curve plot is showing.
+
+I think the take-away that I would not have predicted before running phase 2 is that "regulariser" and "task signal dominator" are the same term in two different reward regimes. On bare table the lift reward is dense enough that a −0.1 penalty is a 10% nudge; on cluttered the same penalty is 100×+ the typical task-reward magnitude in the early-training distribution, so it stops being a nudge and starts being the entire optimisation target. I am still not sure whether the cleaner statement of this is "curriculum penalties should scale with task-reward magnitude" or "the lift-reward sparsity is the real problem and the penalty is just exposing it" — phase 3 is partly about telling those two stories apart. Of H1 and H2 I find H2 the more interesting one to actually run, because if H1 fails (curriculum off and still 0%) it tells me curriculum was a red herring, but if H2 succeeds it tells me something concrete about *what* a working policy looks like on this substrate, which I do not currently have any data point for at all.

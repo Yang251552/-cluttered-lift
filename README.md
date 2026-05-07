@@ -75,15 +75,13 @@ Side-by-side rollout, left to right: zero-shot act-1 policy (lift 94.5%) | phase
 
 ![phase comparison 4-panel](https://raw.githubusercontent.com/Yang251552/cluttered-lift/main/results/videos/phase_comparison_4panel.gif)
 
-<!-- TODO(human): "what I'd try next" paragraph.
-     CLAUDE.md §6: this is the part PIs read for research taste — must be the
-     human's own voice. Likely candidates to discuss: (1) curriculum on the
-     substrate itself (start with 0 spheres, grow density), (2) reward shaping
-     on contact patterns (penalise sphere displacement during reach), (3) world
-     models / model-based PPO that can plan around contact noise, (4) why a
-     bare-table demo is a much cheaper "warm-start" than this whole pipeline
-     and what that says about the value of teacher policies for sim-to-real
-     transfer in clutter. Keep it 4–6 sentences, opinionated, no hedging. -->
+## What I'd try next
+
+If I had another budget cycle on this, the experiment I would actually run first is a substrate curriculum: start training with zero spheres on the table (i.e. the act-1 bare-table task), and grow sphere density linearly over the first ~500 iters until the substrate matches the locked phase-1 config. The reason I want to try this one specifically is that H2 already says PPO can stay on the task manifold once it is there — so a substrate that starts on bare table puts the random-init policy onto the manifold for free, and the question becomes whether the policy can keep up as the substrate gets harder around it. This also has the nice property that it does not require a separately-trained teacher checkpoint, so it is a single-run experiment that fits inside the act-3 framing. If it works, it is a stronger statement than H2 because the policy never had a privileged warm start.
+
+The other thing I am curious about but did not do is opening the H2 evaluation per-episode and splitting the inside-cluster vs outside-cluster spawns. Phase 1 noted the bimodal split (~56% inside, ~44% outside) but never reported the split in eval — I think the H2 reach@2cm drop from 92.58% to ~70% is probably almost entirely on the inside-cluster spawns, and if that were verified it would change how I read the H2 result. The H2 fine-tuning probably did not "lose precision generally"; it probably "stayed precise on outside-cluster, gained robustness inside-cluster". That is a different and more useful story than "warm-start fine-tune trades precision for robustness", and the experiment to tell those two apart is a couple of hours of `eval_granular.py` re-runs with cluster-membership tags written out, not new training.
+
+What I would *not* try is reward shaping on the contact pattern (e.g. penalising sphere displacement during the reach phase). I do not think that is uninteresting, but it changes the substrate definition of the problem, which makes the result hard to compare with phase 1's zero-shot transfer baseline. The whole point of act-3 was that the substrate stays fixed and the questions are about policy and optimiser; once you start re-shaping the reward you are answering a different question and the act-1 baseline stops being the right anchor.
 
 ## Discipline
 

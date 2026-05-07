@@ -125,15 +125,8 @@ scratch.
 - `results/tfevents/phase3_h2/events.out.tfevents.*` (gitignored)
 - `results/logs/phase3_h2_train.log`
 
-> **TODO (human): research observation paragraph.**
->
-> The act-3 thesis lives in this paragraph. Two phase-3 retrains, both same
-> substrate, both same PPO config — H1 (random init) collapses to 0%, H2
-> (warm init) holds at 96%. The optimiser is the same, the substrate is the
-> same; the only thing that differs is whether the policy starts inside the
-> task manifold. What does that imply for how you'd think about training
-> manipulation policies on contact-rich substrates from scratch? A few
-> sentences in your own voice on the gap this exposes between "PPO can train
-> on contact-rich scenes" (true, from a warm start) and "PPO can learn
-> contact-rich scenes" (not under this reward shape, from random init).
-> This is the bit PIs read for research taste.
+## What I take away from H2 being supported
+
+The H1/H2 contrast is the part of this project I think I will actually carry forward into how I look at PPO failures on contact-rich tasks. Same optimiser, same substrate, same hyperparameters, same seed (42), same NoCurric task — and the only thing that differs is whether `model_1499.pt` is loaded at iter 0. That single bit of information moves the eval from 0% / 0% / 0% to 96% / 96% / 70%. Before this experiment I think I would have framed PPO's failure on this substrate as "PPO cannot train contact-rich scenes". The actual statement that survives H2 is much narrower: PPO cannot *bootstrap* into the task manifold on this substrate, but once it is on the manifold it has no problem staying there for 1500 fresh updates. Those are different statements about PPO and the engineering implications are different — the second one says you do not need a fundamentally different RL algorithm, you need a way to plant the policy on the manifold.
+
+I want to be careful not to overclaim from this. H2 is one warm-start, one seed, one substrate parameterisation; the support for "exploration bootstrap is the bottleneck" is real but it is N=1. The reach@2cm regression from 92.58% (zero-shot) to ~70% (H2) is a piece of the picture I have not fully understood yet — my working story is that under contact noise the discrete lift bonus is the only stable gradient and the continuous goal-tracking reward gets averaged out, so the policy reweights toward "lift first, settle later", but I have not actually opened the per-episode trajectories to verify that. If I did this again I would want to do that breakdown, and probably also run H2 from earlier act-1 checkpoints (e.g. `model_500.pt`, `model_750.pt`) to see how warm the warm-start has to be — that would tell me whether the "manifold" is a thin region or a basin, and right now I do not know which.

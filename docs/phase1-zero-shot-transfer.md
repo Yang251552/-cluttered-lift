@@ -96,12 +96,11 @@ success rate is ~84% (solving 0.56·X + 0.44·1.00 = 0.9102 → X ≈ 0.84).
 This bimodal split is the actual research signal phase 1 produces. It is
 the structural feature that phases 2 and 3 should explain or close.
 
-> **TODO (human): research observation paragraph.**
->
-> A few sentences in your own voice on what the bimodal split tells you,
-> what you find interesting about it, and what you'd want phase 3 to test.
-> Claude is not writing this part — it has to read like the engineer who
-> ran the experiment, not like a narrator.
+## What I take away from the bimodal split
+
+What surprised me most about phase 1 is that the failures are not uniform across the spawn region. I had been picturing the −7 pp drop as a "the spheres make every lift slightly harder" effect, but the bimodal-spawn calculation says it is more like a 56% / 44% mixture of "this is basically a buried-cube task at ~84% success" and "this is basically the bare table at ~100% success". So the eval number 91.02% is averaging two regimes that the policy actually treats differently, and the policy itself has no observation that tells it which regime it is in — it just runs the same bare-table-trained behaviour on both. That is part of what I think is interesting about the substrate: it forces a kind of conditional behaviour without giving the policy anything to condition on, so the "smart thing to do" and the "best thing PPO can converge to" are different.
+
+I think for phase 3 the right way to think about this is that any fix has to either give the policy a contact-state observation (which would change the act-1 transfer story — the bare-table policy would not generalise) or absorb the inside-cluster failures into training (which is what phase 2 attempts). I am not sure yet which side of that I would push first, and one thing I would honestly like to do later is split the eval log into inside-cluster and outside-cluster buckets and report them separately, since the averaged number is doing more work than it should. For now I am leaving the bimodality on purpose, because the inside / outside contrast is the one thing in phase 1 that will keep being a useful diagnostic signal for the rest of the project.
 
 ## Phase 2 setup
 

@@ -115,12 +115,8 @@ non-stationary contacts, surrogate-loss instability under noisy rewards, etc.).
 - `results/videos/h1_nocurric_seed42.{mp4,gif}`
 - `results/videos/h1_three_panel.{mp4,gif}`
 
-> **TODO (human): research observation paragraph.**
->
-> What does it mean that *both* curriculum-on and curriculum-off retrains
-> collapse to "do nothing", but via visibly different trajectories on the
-> reward curve? The same final eval number, two different stories getting
-> there. The curriculum was a red herring; the real bottleneck is upstream.
-> A few sentences in your own voice on what this changes about how you'd
-> think about reward design for contact-rich tasks. This is the part PIs
-> read for research taste.
+## What I take away from H1 being falsified
+
+The thing I want to write down before I forget is that going into H1 I would have told someone that the iter-425 cliff in phase 2 was *the cause* of the policy collapse — that is what the curve looked like and that is the most visually salient feature of the run. H1 disabling the curriculum schedule and still ending at 0% was honestly more useful than I expected, because the H1 curve has no cliff, no dramatic feature, just a flat 5.0 ± 0.5 mean reward for 450 iters. Same final eval, same "do nothing" policy, but now there is no curriculum penalty to blame. That collapses my mental model in a useful way: the iter-425 cliff was the symptom that made the failure visible, not the mechanism that produced the failure. The mechanism is something earlier — something that means a random-init policy on this substrate cannot find a useful reward gradient even when nothing is actively pushing it away from one.
+
+I think for reward design the lesson I want to draw is that on a contact-rich substrate the diagnostic question to ask first is not "are the auxiliary penalties tuned right" but "is the task reward dense enough to outvote a network's noise floor at random init". Phase 2 framed the question as the first one, and H1 has shown me the question was wrong. I am still not 100% sure whether the right reframing is "the lift reward is too sparse" or "the reaching reward is too noisy under sphere contacts" — both could produce the same H1 curve, and I do not have a clean experiment in this repo that separates them. If I had more budget I would actually want to run H1 with a *dense* version of the lift reward (a continuous height bonus instead of the 0.04-m threshold) to see whether the policy starts moving — that is the experiment I am most curious about, but it falls outside the act-3 reward-shaping prohibition, so I am explicitly not running it here. H2 is the in-budget version of the same question and that is what I am going to do next.
