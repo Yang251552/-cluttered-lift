@@ -14,15 +14,15 @@ This is **act 3** of a three-repo arc:
 | Repo | Role |
 |---|---|
 | [`isaac-lab-manipulation`](https://github.com/Yang251552/isaac-lab-manipulation) | act 1: standard reproduction on the production stack (`Isaac-Lift-Cube-Franka-v0`, 100% over 256 rollouts × 2 seeds) |
-| [`excavation-rl`](https://github.com/Yang251552/excavation-rl) | act 2: self-built granular-manipulation substrate (custom Warp + hand-rolled PPO); did not converge, kept as a documented lessons-learned artifact |
-| this repo | act 3: same research interest, but on a cheaper Isaac Lab substrate built from small rigid bodies |
+| [`excavation-rl`](https://github.com/Yang251552/excavation-rl) | act 2: self-built granular-manipulation substrate (custom Warp + hand-rolled PPO); the engineering load consumed the research budget before the policy converged, kept as a documented lessons-learned artifact |
+| this repo | act 3: same granular-manipulation question, re-approached inside the Isaac Lab stack with a small rigid-body proxy — same research taste, different engineering budget |
 
 The point of this repo is **not** "I solved granular pick". The useful output is
 a bounded diagnosis: quantified transfer data, one failed from-scratch PPO run,
 and two small falsification experiments that separate an optimizer failure from
-an exploration-bootstrap failure. In the portfolio story, this is the answer to
-act 2's main lesson: keep the granular-manipulation question, but stop spending
-the whole budget on custom infrastructure.
+an exploration-bootstrap failure. In the portfolio story, this is act 2's
+lesson applied: keep the granular-manipulation question, but stop spending the
+whole budget on custom infrastructure.
 
 ## Headline Result
 
@@ -184,4 +184,4 @@ mode this repo studies. That is the scope cut.
 ## Sibling Repos
 
 - **Act 1** — [`isaac-lab-manipulation`](https://github.com/Yang251552/isaac-lab-manipulation): standard `Isaac-Lift-Cube-Franka-v0` reproduction. Provides the bare-table baseline and the `model_1499.pt` checkpoint used for H2.
-- **Act 2** — [`excavation-rl`](https://github.com/Yang251552/excavation-rl): self-built granular-excavation substrate with custom Warp particle physics and hand-rolled PPO. Did not converge; kept as an engineering lessons-learned artifact.
+- **Act 2** — [`excavation-rl`](https://github.com/Yang251552/excavation-rl): self-built granular-excavation substrate with custom Warp particle physics and hand-rolled PPO. The engineering load consumed the research budget before the policy converged; kept as an engineering lessons-learned artifact. This repo is the same research interest brought back inside the production stack.
