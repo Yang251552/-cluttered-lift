@@ -9,13 +9,17 @@ deliberately narrow:
 > the scene is untrainable, or because a random-init policy cannot bootstrap
 > into the first useful reach-and-lift behavior?
 
-This is **act 3** of a three-repo arc:
+This is **act 3** of a four-project preparation arc for **AI-Driven Rock
+Reshaping Simulation and Control**. Each repo is independent, but together they
+show the route from production-stack robot-learning baselines to material
+simulation, contact-rich diagnostics, and graph-based fracture control.
 
-| Repo | Role |
-|---|---|
-| [`isaac-lab-manipulation`](https://github.com/Yang251552/isaac-lab-manipulation) | act 1: standard reproduction on the production stack (`Isaac-Lift-Cube-Franka-v0`, 100% over 256 rollouts × 2 seeds) |
-| [`excavation-rl`](https://github.com/Yang251552/excavation-rl) | act 2: self-built granular-manipulation substrate (custom Warp + hand-rolled PPO); the engineering load consumed the research budget before the policy converged, kept as a documented lessons-learned artifact |
-| this repo | act 3: act 2's lesson applied — same granular-manipulation question, re-approached inside the Isaac Lab stack with a small rigid-body proxy |
+| Act | Repo | Role |
+|---|---|---|
+| **1** | [`isaac-lab-manipulation`](https://github.com/Yang251552/isaac-lab-manipulation) | Standard Isaac Lab manipulation reproduction. Establishes the robot-learning baseline and provides the Lift-Cube checkpoint reused here. |
+| **2** | [`excavation-rl`](https://github.com/Yang251552/excavation-rl) | Granular excavation on a self-built Warp + PPO substrate. The policy did not pass the health gate; the value is the failure diagnosis. |
+| **3** | this repo | Bounded Isaac Lab contact-rich manipulation diagnostic using a rigid-body granular proxy around Lift-Cube. |
+| **4** | [`fracturegraph-control`](https://github.com/Yang251552/fracturegraph-control) | Graph-based fracture-control prototype for **AI-Driven Rock Reshaping Simulation and Control**: lattice simulator, graph dynamics surrogate, and CEM planning. |
 
 The point of this repo is **not** "I solved granular pick". The useful output is
 a bounded diagnosis: quantified transfer data, one failed from-scratch PPO run,
@@ -185,3 +189,4 @@ mode this repo studies. That is the scope cut.
 
 - **Act 1** — [`isaac-lab-manipulation`](https://github.com/Yang251552/isaac-lab-manipulation): standard `Isaac-Lift-Cube-Franka-v0` reproduction. Provides the bare-table baseline and the `model_1499.pt` checkpoint used for H2.
 - **Act 2** — [`excavation-rl`](https://github.com/Yang251552/excavation-rl): self-built granular-excavation substrate with custom Warp particle physics and hand-rolled PPO. The engineering load consumed the research budget before the policy converged; kept as an engineering lessons-learned artifact.
+- **Act 4** — [`fracturegraph-control`](https://github.com/Yang251552/fracturegraph-control): graph-based fracture-control prototype. Extends the preparation arc toward fracture simulation, learned graph dynamics, and goal-driven planning for rock reshaping.
